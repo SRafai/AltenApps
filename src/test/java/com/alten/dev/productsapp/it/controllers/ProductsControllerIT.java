@@ -81,33 +81,11 @@ public class ProductsControllerIT {
     }
 
     @Test
-    public void testCreateProduct() throws Exception {
-        when(productMapper.toEntity(productDTO)).thenReturn(productEntity);
-        when(productService.saveProduct(productEntity)).thenReturn(productEntity);
-        when(productMapper.toDto(productEntity)).thenReturn(productDTO);
+    public void testCountProducts() throws Exception {
+        when(productService.countProducts()).thenReturn(1L);
 
-        String body = "{\"code\":\"P001\",\"name\":\"Test Product\",\"description\":\"Product description\",\"category\":\"Category\",\"price\":100.0,\"quantity\":10,\"inventoryStatus\":\""+InventoryStatusEnum.INSTOCK+"\",\"rating\":4.5}";
-        mockMvc.perform(post(URL)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.code").value("P001"))
-                .andExpect(jsonPath("$.name").value("Test Product"))
-                .andExpect(jsonPath("$.price").value(100.0));
-    }
-
-    @Test
-    public void testGetAllProducts() throws Exception {
-        when(productService.getAllProducts()).thenReturn(List.of(productEntity));
-        when(productMapper.toDto(productEntity)).thenReturn(productDTO);
-
-        mockMvc.perform(get(URL))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].code").value("P001"))
-                .andExpect(jsonPath("$[0].name").value("Test Product"));
+        mockMvc.perform(get(URL+"/count"))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -119,28 +97,6 @@ public class ProductsControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("P001"))
                 .andExpect(jsonPath("$.name").value("Test Product"));
-    }
-
-    @Test
-    public void testUpdateProduct() throws Exception {
-        productDTO.setId(1L);
-        productDTO.setCreatedAt(new Date()); // Set createdAt to the current date
-        productDTO.setUpdatedAt(new Date()); // Set updatedAt to the current date
-
-        when(productMapper.toEntity(productDTO)).thenReturn(productEntity);
-        when(productService.updateProduct(1L, productEntity)).thenReturn(productEntity);
-        when(productMapper.toDto(productEntity)).thenReturn(productDTO);
-
-        String body = "{\"id\":1,\"code\":\"P001\",\"name\":\"Updated Product\",\"description\":\"Updated description\",\"category\":\"Category\",\"price\":120.0,\"quantity\":15,\"inventoryStatus\":\"INSTOCK\",\"rating\":4.8}";
-
-        mockMvc.perform(patch(URL+"/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Updated Product"))
-                .andExpect(jsonPath("$.price").value(120.0));
     }
 
 

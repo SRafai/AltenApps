@@ -17,4 +17,5 @@ public interface ProductService {
 
     void deleteProduct(Long productId);
     Page<Product> getPaginatedProducts(Pageable pageable);
+    long countProducts();
 }

@@ -63,4 +63,9 @@ public class ProductServiceImpl implements ProductService {
     public Page<Product> getPaginatedProducts(Pageable pageable) {
         return productRepository.findAll(pageable);
     }
+
+    @Override
+    public long countProducts() {
+        return productRepository.countAllProducts();
+    }
 }

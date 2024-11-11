@@ -40,7 +40,11 @@ public class ProductsController {
     @JsonView(Views.Public.class)
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO product){
         if (product != null) {
-            return new ResponseEntity<>(product, HttpStatus.CREATED);
+            Product p = this.productMapper.toEntity(product);
+            if(p != null){
+                this.productService.saveProduct(p);
+                return new ResponseEntity<>(product, HttpStatus.CREATED);
+            }
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
@@ -72,6 +76,12 @@ public class ProductsController {
     public ResponseEntity<ProductDTO> getProduct(@PathVariable Long id){
         ProductDTO productDTO = this.productMapper.toDto(this.productService.getProduct(id));
         return new ResponseEntity<>(productDTO, HttpStatus.OK);
+    }
+    @Operation(summary = "Afficher le total des produits")
+    @GetMapping("/count")
+    @JsonView(Views.Internal.class)
+    public ResponseEntity<Long> getProductsCount(){
+        return new ResponseEntity<>(this.productService.countProducts(), HttpStatus.OK);
     }
 
     //Mettre à jour un produit
