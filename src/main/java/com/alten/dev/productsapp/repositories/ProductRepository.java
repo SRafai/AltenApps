@@ -1,6 +1,6 @@
-package com.alten.dev.productsapp.dao.repositories;
+package com.alten.dev.productsapp.repositories;
 
-import com.alten.dev.productsapp.dao.entities.Product;
+import com.alten.dev.productsapp.entities.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

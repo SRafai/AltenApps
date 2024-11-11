@@ -1,6 +1,7 @@
-package com.alten.dev.productsapp.repositories;
+package com.alten.dev.productsapp.ut.repositories;
 
 import com.alten.dev.productsapp.entities.Product;
+import com.alten.dev.productsapp.repositories.ProductRepository;
 import com.alten.dev.productsapp.services.impl.ProductServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

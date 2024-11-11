@@ -1,5 +1,6 @@
-package com.alten.dev.productsapp.controllers;
+package com.alten.dev.productsapp.ut.controllers;
 
+import com.alten.dev.productsapp.controllers.AuthController;
 import com.alten.dev.productsapp.dto.JwtResponse;
 import com.alten.dev.productsapp.dto.UserLoginRequest;
 import com.alten.dev.productsapp.utils.JwtUtil;

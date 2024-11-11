@@ -1,8 +1,9 @@
-package com.alten.dev.productsapp.dao.entities;
+package com.alten.dev.productsapp.entities;
 
 import com.alten.dev.productsapp.enums.InventoryStatusEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,6 +15,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Product {
 
     @Id

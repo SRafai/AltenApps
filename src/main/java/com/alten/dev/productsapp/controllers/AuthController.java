@@ -1,4 +1,4 @@
-package com.alten.dev.productsapp.controller;
+package com.alten.dev.productsapp.controllers;
 
 import com.alten.dev.productsapp.dto.JwtResponse;
 import com.alten.dev.productsapp.dto.UserLoginRequest;
@@ -7,11 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -26,13 +24,9 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody UserLoginRequest loginRequest) throws Exception {
-        try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
             );
-        } catch (BadCredentialsException e) {
-            throw new Exception("Identifiants invalides", e);
-        }
 
         final String jwt = jwtUtil.generateToken(loginRequest.getUsername());
         return ResponseEntity.ok(new JwtResponse(jwt));

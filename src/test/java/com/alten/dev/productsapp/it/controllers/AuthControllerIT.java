@@ -1,13 +1,11 @@
-package com.alten.dev.productsapp.it;
+package com.alten.dev.productsapp.it.controllers;
 
-import com.alten.dev.productsapp.dto.JwtResponse;
 import com.alten.dev.productsapp.dto.UserLoginRequest;
 import com.alten.dev.productsapp.utils.JwtUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

@@ -1,5 +1,6 @@
-package com.alten.dev.productsapp.controllers;
+package com.alten.dev.productsapp.ut.controllers;
 
+import com.alten.dev.productsapp.controllers.ProductsController;
 import com.alten.dev.productsapp.dto.ProductDTO;
 import com.alten.dev.productsapp.entities.Product;
 import com.alten.dev.productsapp.enums.InventoryStatusEnum;
@@ -11,14 +12,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 
 class ProductsControllerTest {
 
@@ -76,13 +81,23 @@ class ProductsControllerTest {
     void getAllProducts_ShouldReturnListOfProducts() {
 
         List<Product> productList = Arrays.asList(product);
-        Mockito.when(productService.getAllProducts()).thenReturn(productList);
-        Mockito.when(productMapper.toDto(any(Product.class))).thenReturn(productDTO);
 
-        ResponseEntity<List<ProductDTO>> response = productsController.getAllProducts();
+        // Create a Page with one product
+        Page<Product> productPage = new PageImpl<>(productList, PageRequest.of(0, 10), 1);
 
+        // Mocking productService and productMapper
+        Mockito.when(productService.getPaginatedProducts(PageRequest.of(0, 10)))
+                .thenReturn(productPage);
+        Mockito.when(productMapper.toDto(any(Product.class)))
+                .thenReturn(productDTO);
+
+        // When
+        ResponseEntity<List<ProductDTO>> response = productsController.getAllProductsP(0, 10);
+
+        // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(1, response.getBody().size());
+        assertNotNull(response.getBody()); // Ensure response body is not null
+        assertEquals(1, response.getBody().size()); // Check if the size is 1 (one product)
         assertEquals("P123", response.getBody().get(0).getCode());
     }
 
@@ -101,17 +116,31 @@ class ProductsControllerTest {
 
     @Test
     void updateProduct_ShouldReturnUpdatedProduct() {
+        // Given: Initialize product and productDTO with necessary values
+        Product product = new Product();
+        product.setId(1L); // Make sure to set an ID
+        product.setCode("P123");
+        product.setCreatedAt(new Date()); // Assuming you want to mock this
+        product.setUpdatedAt(new Date());
 
+        ProductDTO productDTO = new ProductDTO();
+        productDTO.setId(1L); // Ensure the DTO has an ID
+        productDTO.setCode("P123");
+
+        // Mocking the service and mapper methods
         Mockito.when(productMapper.toEntity(any(ProductDTO.class))).thenReturn(product);
-        Mockito.when(productService.updateProduct(anyLong(), any(Product.class))).thenReturn(product);
+        Mockito.when(productService.updateProduct(eq(1L), any(Product.class))).thenReturn(product);
         Mockito.when(productMapper.toDto(any(Product.class))).thenReturn(productDTO);
 
+        // When: Call the updateProduct method in the controller
         ResponseEntity<ProductDTO> response = productsController.updateProduct(1L, productDTO);
 
+        // Then: Verify the response
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals("P123", response.getBody().getCode());
+        assertEquals("P123", response.getBody().getCode()); // Assert that the product code is correct
     }
+
 
     @Test
     void deleteProduct_ShouldReturnNoContent() {
